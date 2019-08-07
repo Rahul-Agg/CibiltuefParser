@@ -1,0 +1,16 @@
+com\loanframe\lfcibil\contract\AssetClassificationList.class
+com\loanframe\lfcibil\contract\PhoneNumberList.class
+com\loanframe\lfcibil\contract\ContactInformationList.class
+com\loanframe\lfcibil\contract\ResponseAccountNumber.class
+com\loanframe\lfcibil\contract\EmailAddressList.class
+com\loanframe\lfcibil\contract\ResponseScoreSegment.class
+com\loanframe\lfcibil\contract\EnquiryInformationList.class
+com\loanframe\lfcibil\contract\IdentificationList.class
+com\loanframe\lfcibil\contract\ResponseTuef.class
+com\loanframe\lfcibil\contract\AccountInformationList.class
+com\loanframe\lfcibil\contract\AccountSummary.class
+com\loanframe\lfcibil\contract\EmploymentInformationList.class
+com\loanframe\lfcibil\contract\CibilUploadResult.class
+com\loanframe\lfcibil\util\Utility.class
+com\loanframe\lfcibil\contract\ResponseNameSegment.class
+com\loanframe\lfcibil\contract\ResponseEndSegment.class
