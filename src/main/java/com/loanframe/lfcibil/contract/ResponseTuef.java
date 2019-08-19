@@ -101,11 +101,12 @@ public class ResponseTuef {
         ResponseTuef obj = new ResponseTuef();
         obj.setSegmentTag("TUEF");
         obj.setVersion("12");
-        obj.setMemberRefNumber(str.substring(6, 31));
+        obj.setMemberRefNumber(str.substring(6, 31).trim());
         obj.setFutureUse1(str.substring(31, 33));
         obj.setFutureUse2(str.substring(33, 37));
         obj.setMemberId(str.substring(37, 67).trim());
         obj.setSubjectReturnCode(str.substring(67, 68));
+        String ctrlNo = str.substring(68, 80);
         obj.setControlNumber(str.substring(68, 80));
         try {
             String date = Utility.formatStringToDate(str.substring(80, 88));
@@ -113,8 +114,7 @@ public class ResponseTuef {
         } catch (ParseException exception) {
             exception.printStackTrace();
         }
-
-        obj.setEnquiryTime(str.substring(88, 94));
+        obj.setEnquiryTime(str.substring(88,90)+":"+str.substring(90,92)+":"+str.substring(92,94));
         return obj;
     }
 }
