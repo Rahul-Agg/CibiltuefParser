@@ -7,31 +7,26 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class IdentificationList {
-    static List<IdentificationList> list;
-
-    static {
-        list = new ArrayList<>();
-    }
-
-    private String IDnumber;
-    private String IDtype;
+    private String number;
+    private String type;
     private String issueDate;
     private String expiryDate;
 
+
     public String getIDnumber() {
-        return IDnumber;
+        return number;
     }
 
     public void setIDnumber(String IDnumber) {
-        this.IDnumber = IDnumber;
+        this.number = IDnumber;
     }
 
     public String getIDtype() {
-        return IDtype;
+        return type;
     }
 
     public void setIDtype(String IDtype) {
-        this.IDtype = IDtype;
+        this.type = IDtype;
     }
 
     public String getIssueDate() {
@@ -51,6 +46,7 @@ public class IdentificationList {
     }
 
     public List<IdentificationList> identificationInformation(String str) {
+        List<IdentificationList> list = new ArrayList<>();
         int index, i, length = 0;
         String word = "ID03I0";
         String tempData = "";
