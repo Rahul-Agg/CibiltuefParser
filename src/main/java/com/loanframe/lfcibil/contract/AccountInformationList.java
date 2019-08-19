@@ -2,6 +2,8 @@ package com.loanframe.lfcibil.contract;
 
 import com.loanframe.lfcibil.util.Utility;
 
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.text.ParseException;
 import java.util.ArrayList;
@@ -16,13 +18,18 @@ import java.util.Map;
 public class AccountInformationList {
 
     static Map<String, String> keyValueMap = new HashMap<>();
+    static List<String> dateOpenedList;
+
+    public List<String> getDateOpenedList() {
+        return dateOpenedList;
+    }
+
     public String amountOverdue;
     public String dateOfLastPayment;
     public String dateOpened;
     public String emiAmount;
     public String memberName;
     public String ownership;
-    List<AccountInformationList> accountInformationList;
     private String accountNumber;
     private String accountType;
     private String actualPaymentAmount;
@@ -44,7 +51,7 @@ public class AccountInformationList {
     private String settlement;
     private String writtenOffPrincipal;
     private String writtenOffTotal;
-    private List<AssetClassificationList> assetList;
+    private List<AssetClassificationList> assetClassificationList;
     private String disputeRemarks1; //not in original fin360
     private String disputeRemarks2; //not in original fin360
     private String cibilRemarks;//not in original fin360
@@ -59,21 +66,22 @@ public class AccountInformationList {
     private String dateDisputeReamrks; //not in original fin360
 
     {
-        accountInformationList = new ArrayList<>();
+        assetClassificationList = new ArrayList<>();
     }
 
+    static
     {
-        assetList = new ArrayList<>();
+        dateOpenedList = new ArrayList<>();
     }
     public AccountInformationList() {
     }
 
     public List<AssetClassificationList> getAssetList() {
-        return assetList;
+        return assetClassificationList;
     }
 
     public void setAssetList(List<AssetClassificationList> assetList) {
-        this.assetList = assetList;
+        this.assetClassificationList = assetList;
     }
 
     public String getValueOfCollateral() {
@@ -379,8 +387,9 @@ public class AccountInformationList {
     public void setTotalAccounts(String totalAccounts) {
         this.totalAccounts = totalAccounts;
     }
-
+    static String tempDate="";
     public List<AccountInformationList> parseAccountInformation(String str) throws IOException {
+        List<AccountInformationList> accountInformationList = new ArrayList<>();
         String word = "TL04T", tag, value;
         int i = 0, count = 1;
         String tempData = "";
@@ -420,9 +429,7 @@ public class AccountInformationList {
 
 
             if (tag.equals("04")) {
-                //count++;
-                //System.out.println(count);
-                keyValueMap = Utility.asMap("C:\\lf-cibil-parser\\src\\com\\loanframe\\lfcibil\\AccountTypeTable.txt", 2);
+                keyValueMap = Utility.asMap("./src/main/java/com/loanframe/lfcibil/files/AccountTypeTable.txt", 2);
                 i = i + 4;
                 value = str.substring(i, i + 2);
                 obj.setAccountType(keyValueMap.get(value));
@@ -459,7 +466,15 @@ public class AccountInformationList {
             if (tag.equals("08")) {
 
                 i = i + 4;
-                obj.setDateOpened(str.substring(i, i + 8));
+                dateOpenedList.add(str.substring(i, i + 8));
+                try {
+                    obj.setDateOpened(Utility.formatStringToDate(str.substring(i, i + 8)));
+                }
+                catch (ParseException exception)
+                {
+                    exception.printStackTrace();
+                }
+
                 i = i + 8;
                 tag = str.substring(i, i + 2);
 
@@ -468,20 +483,38 @@ public class AccountInformationList {
 
             if (tag.equals("09")) {
                 i = i + 4;
-                obj.setDateOfLastPayment(str.substring(i, i + 8));
+                try {
+                    obj.setDateOfLastPayment(Utility.formatStringToDate(str.substring(i, i + 8)));
+                }
+                catch (ParseException exception)
+                {
+                    exception.printStackTrace();
+                }
                 i = i + 8;
                 tag = str.substring(i, i + 2);
             }
             if (tag.equals("10")) {
                 i = i + 4;
-                obj.setDateClosed(str.substring(i, i + 8));
+                try {
+                    obj.setDateClosed(Utility.formatStringToDate(str.substring(i, i + 8)));
+                }
+                catch (ParseException exception)
+                {
+                    exception.printStackTrace();
+                }
                 i = i + 8;
                 tag = str.substring(i, i + 2);
             }
 
             if (tag.equals("11")) {
                 i = i + 4;
-                obj.setDateReported(str.substring(i, i + 8));
+                try {
+                    obj.setDateReported(Utility.formatStringToDate(str.substring(i, i + 8)));
+                }
+                catch (ParseException exception)
+                {
+                    exception.printStackTrace();
+                }
                 i = i + 8;
                 tag = str.substring(i, i + 2);
             }
@@ -536,12 +569,9 @@ public class AccountInformationList {
                 tag = str.substring(i, i + 2);
             }
             if (tag.equals("29")) {
-                //System.out.println(tag);
-                //paymentHistory="";
                 i = i + 2;
                 length = Integer.parseInt(str.substring(i, i + 2));
                 i = i + 2;
-                //System.out.println(str.substring(i, i + length)+" From tag 29");
                 tempData = tempData + str.substring(i, i + length);
                 obj.setPaymentHistory(tempData);
                 i = i + length;
@@ -551,22 +581,33 @@ public class AccountInformationList {
             }
 
             if (tag.equals("30")) {
-                //System.out.println(i);
-                //System.out.println(tag);
                 i = i + 4;
-                obj.setPaymentStartDate(str.substring(i, i + 8));
+                try {
+                    tempDate=str.substring(i, i + 8);
+                    obj.setPaymentStartDate(Utility.formatStringToDate(str.substring(i, i + 8)));
+                }
+                catch (ParseException exception)
+                {
+                    exception.printStackTrace();
+                }
                 i = i + 8;
                 tag = str.substring(i, i + 2);
             }
             if (tag.equals("31")) {
                 i = i + 4;
-                obj.setPaymentEndDate(str.substring(i, i + 8));
+                try {
+                    obj.setPaymentEndDate(Utility.formatStringToDate(str.substring(i, i + 8)));
+                }
+                catch (ParseException exception)
+                {
+                    exception.printStackTrace();
+                }
                 i = i + 8;
                 tag = str.substring(i, i + 2);
             }
                 String history = obj.getPaymentHistory();
                 try {
-                    String start = Utility.dateAsMonthYear(obj.getPaymentStartDate());
+                    String start = Utility.dateAsMonthYear(tempDate);
                   List<AssetClassificationList> list = obj.setAssets(history, start);
                    obj.setAssetList(list);
                 } catch (ParseException exception) {
@@ -768,13 +809,19 @@ public class AccountInformationList {
 
             if (tag.equals("80")) {
                 i = i + 4;
-                obj.setDateErrorCode(str.substring(i, i + 8));
+                try {
+                    obj.setDateErrorCode(Utility.formatStringToDate(str.substring(i, i + 8)));
+                }
+                catch (ParseException exception)
+                {
+                    exception.printStackTrace();
+                }
                 i = i + 8;
                 tag = str.substring(i, i + 2);
             }
 
             if (tag.equals("82")) {
-                keyValueMap = Utility.asMap("C:\\lf-cibil-parser\\src\\com\\loanframe\\lfcibil\\ErrorCodes.txt", 3);
+                keyValueMap = Utility.asMap("./src/main/java/com/loanframe/lfcibil/files/ErrorCodes.txt", 3);
                 i = i + 4;
                 value = str.substring(i, i + 3);
                 obj.setErrorCode(keyValueMap.get(value));
@@ -791,7 +838,7 @@ public class AccountInformationList {
 
             if (tag.equals("84")) {
 
-                keyValueMap = Utility.asMap("C:\\lf-cibil-parser\\src\\com\\loanframe\\lfcibil\\RemarksCodes" +
+                keyValueMap = Utility.asMap("./src/main/java/com/loanframe/lfcibil/files/RemarksCodes" +
                                 ".txt",
                         6);
                 i = i + 4;
